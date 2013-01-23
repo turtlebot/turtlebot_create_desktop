@@ -1,0 +1,17 @@
+<stack>
+  <description brief="turtlebot_create_desktop">
+    Visualisation tools for the iRobot Create
+  </description>
+  <author>Marcus Liebhardt</author>
+  <license>BSD</license>  
+  <review status="experimental" notes=""/>
+  <url>http://ros.org/wiki/turtlebot_create_desktop</url>
+
+  <depend stack="common_msgs"/> <!-- diagnostic_msgs -->
+  <depend stack="turtlebot_create"/> <!-- create_node -->
+<!--  <depend stack="ros"/> -->  <!-- roslib --> 
+  <depend stack="ros_comm"/> <!-- rospy -->
+  <depend stack="rqt"/> <!-- rqt_gui, rqt_gui_py -->
+  <depend stack="rqt_robot_plugins"/> <!-- rqt_robot_dashboard -->
+<!--  <depend stack="std_msgs"/> --> <!-- std_msgs -->
+</stack>
