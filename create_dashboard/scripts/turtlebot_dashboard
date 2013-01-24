@@ -1,1 +1,0 @@
-rosrun rqt_gui rqt -s turtlebot_dashboard
