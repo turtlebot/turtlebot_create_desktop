@@ -47,7 +47,7 @@ class CreateDashboard(Dashboard):
         # before being used by dashboard_callback. Could be done more cleanly than this
         # though.
         self.lap_bat = BatteryDashWidget("Laptop")
-        self.create_bat = BatteryDashWidget("Create")
+        self.create_bat = TurtlebotBattery("Create")
         self.breakers = [BreakerButton('breaker0', lambda: self.toggle_breaker(0)), 
                          BreakerButton('breaker1', lambda: self.toggle_breaker(1)),
                          BreakerButton('breaker2', lambda: self.toggle_breaker(2))]
@@ -73,48 +73,37 @@ class CreateDashboard(Dashboard):
         self._dashboard_message = msg
         self._last_dashboard_message_time = rospy.get_time()
   
-        battery_status = {}
-        laptop_battery_status = {}
+        battery_status = {}  # Used to store TurtlebotBattery status info
         breaker_status = {}
         op_mode = None
         for status in msg.status:
+            print("Status callback %s"%status.name)
             if status.name == "/Power System/Battery":
                 for value in status.values:
-                    if value.key == 'Percent':
-                        self.create_bat.update_perc(float(value.value))
-                        self.create_bat.update_time(float(value.value))
-                    elif value.key == "Charging State":
-                        if value.value == "Trickle Charging" or value.value == "Full Charging":
-                            self.create_bat.set_charging(True)
-                        else:
-                            self.create_bat.set_charging(False)
-            # Is this one needed? I don't think so.
-            if status.name == "/Power System/Laptop Battery":
-                for value in status.values:
-                    laptop_battery_status[value.key]=value.value
+                    print value
+                    battery_status[value.key]=value.value
+                    # Create battery actually doesn't check public or check
+                    # charging state. Could maybe done by looking at +-
+                    # of current value
+                    # Below is kobuki battery code.
+                    # Best place to fix this is in create driver to match the kobuki
+                    # diagnostics 
+                    #elif value.key == "Charging State":
+                    #    if value.value == "Trickle Charging" or value.value == "Full Charging":
+                    #        self.create_bat.set_charging(True)
+                    #    else:
+                    #        self.create_bat.set_charging(False)
             if status.name == "/Mode/Operating Mode":
                 op_mode=status.message
             if status.name == "/Digital IO/Digital Outputs":
                 #print "got digital IO"
                 for value in status.values:
                     breaker_status[value.key]=value.value
-  
-        #########################################################
-        # Maybe don't need any of this battery stuff anymore?
-        #########################################################
+
+        # If battery diagnostics were found, calculate percentages and stuff  
         if (battery_status):
-          self.create_bat.set_power_state(battery_status)
-        else:
-          #self._power_state_ctrl.set_stale()
-          print("Power State Stale")
-  
-        if (laptop_battery_status):
-          self.lap_bat.set_power_state(laptop_battery_status)
-        else:
-          #self._power_state_ctrl_laptop.set_stale()
-          print("Laptop battery stale")
-        #########################################################
-        
+            self.create_bat.set_power_state(battery_status)
+
         if (breaker_status):
             self._raw_byte = int(breaker_status['Raw Byte'])
             self._update_breakers()
