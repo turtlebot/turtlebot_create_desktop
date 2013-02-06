@@ -11,6 +11,7 @@ from QtGui import QMessageBox, QAction
 from python_qt_binding.QtCore import QSize
 
 from .battery import TurtlebotBattery
+from linux_hardware.msg import LaptopChargeStatus
 
 import rospkg
 import os.path
@@ -41,9 +42,20 @@ class CreateDashboard(Dashboard):
 
         self._raw_byte = None
         self.digital_outs = [0,0,0]
+
+        # These were moved out of get_widgets because they are sometimes not defined
+        # before being used by dashboard_callback. Could be done more cleanly than this
+        # though.
+        self.lap_bat = BatteryDashWidget("Laptop")
+        self.create_bat = BatteryDashWidget("Create")
+        self.breakers = [BreakerButton('breaker0', lambda: self.toggle_breaker(0)), 
+                         BreakerButton('breaker1', lambda: self.toggle_breaker(1)),
+                         BreakerButton('breaker2', lambda: self.toggle_breaker(2))]
         
+        # This is what gets dashboard_callback going eagerly
         self._dashboard_agg_sub = rospy.Subscriber('diagnostics_agg', diagnostic_msgs.msg.DiagnosticArray, self.dashboard_callback)
         self._power_control = rospy.ServiceProxy('turtlebot_node/set_digital_outputs', create_node.srv.SetDigitalOutputs)
+        self._laptop_bat_sub = rospy.Subscriber('/laptop_charge', LaptopChargeStatus, self.laptop_cb)
 
     def get_widgets(self):
         self.mode = MenuDashWidget('Mode')
@@ -52,17 +64,9 @@ class CreateDashboard(Dashboard):
         self.mode.add_action('Passive', self.on_passive_mode)
         self.mode.add_action('Safe', self.on_safe_mode)
 
-        self.breakers = [BreakerButton('breaker0', lambda: self.toggle_breaker(0)), 
-                         BreakerButton('breaker1', lambda: self.toggle_breaker(1)),
-                         BreakerButton('breaker2', lambda: self.toggle_breaker(2))]
-
-        self.create_bat = TurtlebotBattery('create_bat')
-        self.lap_bat = TurtlebotBattery('laptop_bat')
-        self.batteries = [self.create_bat, self.lap_bat]
-
         return [[MonitorDashWidget(self.context), ConsoleDashWidget(self.context), self.mode],
                 self.breakers,
-                self.batteries,
+                [self.lap_bat, self.create_bat],
                 [NavViewDashWidget(self.context)]]
 
     def dashboard_callback(self, msg):
@@ -76,7 +80,15 @@ class CreateDashboard(Dashboard):
         for status in msg.status:
             if status.name == "/Power System/Battery":
                 for value in status.values:
-                    battery_status[value.key]=value.value
+                    if value.key == 'Percent':
+                        self.create_bat.update_perc(float(value.value))
+                        self.create_bat.update_time(float(value.value))
+                    elif value.key == "Charging State":
+                        if value.value == "Trickle Charging" or value.value == "Full Charging":
+                            self.create_bat.set_charging(True)
+                        else:
+                            self.create_bat.set_charging(False)
+            # Is this one needed? I don't think so.
             if status.name == "/Power System/Laptop Battery":
                 for value in status.values:
                     laptop_battery_status[value.key]=value.value
@@ -87,6 +99,9 @@ class CreateDashboard(Dashboard):
                 for value in status.values:
                     breaker_status[value.key]=value.value
   
+        #########################################################
+        # Maybe don't need any of this battery stuff anymore?
+        #########################################################
         if (battery_status):
           self.create_bat.set_power_state(battery_status)
         else:
@@ -98,10 +113,16 @@ class CreateDashboard(Dashboard):
         else:
           #self._power_state_ctrl_laptop.set_stale()
           print("Laptop battery stale")
+        #########################################################
         
         if (breaker_status):
             self._raw_byte = int(breaker_status['Raw Byte'])
             self._update_breakers()
+
+    def laptop_cb(self, msg):
+        self.lap_bat.update_perc(float(msg.percentage))
+        self.lap_bat.update_time(float(msg.percentage))
+        self.lap_bat.set_charging(bool(msg.charge_state))
 
     def toggle_breaker(self, index):
         try:
