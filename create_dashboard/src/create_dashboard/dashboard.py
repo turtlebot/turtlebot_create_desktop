@@ -11,7 +11,6 @@ from QtGui import QMessageBox, QAction
 from python_qt_binding.QtCore import QSize
 
 from .battery import TurtlebotBattery
-from linux_hardware.msg import LaptopChargeStatus
 
 import rospkg
 import os.path
@@ -55,7 +54,6 @@ class CreateDashboard(Dashboard):
         # This is what gets dashboard_callback going eagerly
         self._dashboard_agg_sub = rospy.Subscriber('diagnostics_agg', diagnostic_msgs.msg.DiagnosticArray, self.dashboard_callback)
         self._power_control = rospy.ServiceProxy('turtlebot_node/set_digital_outputs', create_node.srv.SetDigitalOutputs)
-        self._laptop_bat_sub = rospy.Subscriber('/laptop_charge', LaptopChargeStatus, self.laptop_cb)
 
     def get_widgets(self):
         self.mode = MenuDashWidget('Mode')
@@ -75,6 +73,7 @@ class CreateDashboard(Dashboard):
   
         battery_status = {}  # Used to store TurtlebotBattery status info
         breaker_status = {}
+        laptop_battery_status = {}
         op_mode = None
         for status in msg.status:
             print("Status callback %s"%status.name)
@@ -93,25 +92,30 @@ class CreateDashboard(Dashboard):
                     #        self.create_bat.set_charging(True)
                     #    else:
                     #        self.create_bat.set_charging(False)
-            if status.name == "/Mode/Operating Mode":
+            elif status.name == "/Mode/Operating Mode":
                 op_mode=status.message
-            if status.name == "/Digital IO/Digital Outputs":
+            elif status.name == "/Digital IO/Digital Outputs":
                 #print "got digital IO"
                 for value in status.values:
                     breaker_status[value.key]=value.value
+            elif status.name == "/Power System/Laptop Battery":
+                for value in status.values:
+                    laptop_battery_status[value.key]=value.value
 
         # If battery diagnostics were found, calculate percentages and stuff  
+        if (laptop_battery_status):
+            percentage = float(laptop_battery_status['Charge (Ah)'])/float(laptop_battery_status['Capacity (Ah)'])
+            self.lap_bat.update_perc(percentage*100)
+            self.lap_bat.update_time(percentage*100)
+            charging_state = True if float(laptop_battery_status['Current (A)']) > 0.0 else False
+            self.lap_bat.set_charging(charging_state)
+
         if (battery_status):
             self.create_bat.set_power_state(battery_status)
 
         if (breaker_status):
             self._raw_byte = int(breaker_status['Raw Byte'])
             self._update_breakers()
-
-    def laptop_cb(self, msg):
-        self.lap_bat.update_perc(float(msg.percentage))
-        self.lap_bat.update_time(float(msg.percentage))
-        self.lap_bat.set_charging(bool(msg.charge_state))
 
     def toggle_breaker(self, index):
         try:

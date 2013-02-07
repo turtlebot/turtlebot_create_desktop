@@ -20,6 +20,4 @@
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml" />
   </export>
-
-  <depend package="linux_hardware"/>
 </package>
