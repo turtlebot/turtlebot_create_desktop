@@ -24,7 +24,7 @@ class BreakerButton(IconToolButton):
         self._on_icon = ['bg-green.svg', 'ic-breaker.svg']
         self._off_icon = ['bg-red.svg', 'ic-breaker.svg']
     
-        icons = [self._on_icon, self._off_icon]
+        icons = [self._off_icon, self._on_icon]
 
         super(BreakerButton, self).__init__(name, icons=icons)
 
