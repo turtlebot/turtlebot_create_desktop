@@ -1,4 +1,4 @@
 turtlebot_create_desktop
 ========================
 
-Visualisation tools for the iRobot Create
+Visualisation and simulation tools for the iRobot Create

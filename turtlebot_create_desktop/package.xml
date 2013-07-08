@@ -10,6 +10,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>create_dashboard</run_depend>
+  <run_depend>create_gazebo_plugins</run_depend>
 
   <export>
     <metapackage/>
