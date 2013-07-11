@@ -4,7 +4,6 @@ from distutils.core import setup
 from catkin_pkg.python_setup import generate_distutils_setup
 
 d = generate_distutils_setup(packages=['create_dashboard'],
-                             scripts=['scripts/create_dashboard'],
                              package_dir={'': 'src'})
 
 setup(**d)
