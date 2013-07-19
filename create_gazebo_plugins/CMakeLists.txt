@@ -29,7 +29,8 @@ include_directories(include
 
 add_library(gazebo_ros_create src/gazebo_ros_create.cpp)
 
-add_dependencies(gazebo_ros_create geometry_msgs_gencpp
+add_dependencies(gazebo_ros_create create_node_gencpp
+                                   geometry_msgs_gencpp
                                    nav_msgs_gencpp
                                    sensor_msgs_gencpp)
 
