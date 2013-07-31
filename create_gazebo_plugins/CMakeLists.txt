@@ -23,6 +23,7 @@ catkin_package(INCLUDE_DIRS include
                               roscpp
                               sensor_msgs)
 
+link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(include
                     ${catkin_INCLUDE_DIRS}
                     ${GAZEBO_INCLUDE_DIRS})
