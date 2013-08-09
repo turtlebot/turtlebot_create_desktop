@@ -51,46 +51,44 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 
   this->node_namespace_ = "";
   if (_sdf->HasElement("node_namespace"))
-    this->node_namespace_ = _sdf->GetElement("node_namespace")->GetValueString() + "/";
+    this->node_namespace_ = _sdf->GetElement("node_namespace")->Get<std::string>() + "/";
 
 
   left_wheel_joint_name_ = "left_wheel_joint";
   if (_sdf->HasElement("left_wheel_joint"))
-    left_wheel_joint_name_ = _sdf->GetElement("left_wheel_joint")->GetValueString();
+    left_wheel_joint_name_ = _sdf->GetElement("left_wheel_joint")->Get<std::string>();
 
   right_wheel_joint_name_ = "right_wheel_joint";
   if (_sdf->HasElement("right_wheel_joint"))
-    right_wheel_joint_name_ = _sdf->GetElement("right_wheel_joint")->GetValueString();
+    right_wheel_joint_name_ = _sdf->GetElement("right_wheel_joint")->Get<std::string>();
 
   front_castor_joint_name_ = "front_castor_joint";
   if (_sdf->HasElement("front_castor_joint"))
-    front_castor_joint_name_ = _sdf->GetElement("front_castor_joint")->GetValueString();
+    front_castor_joint_name_ = _sdf->GetElement("front_castor_joint")->Get<std::string>();
 
   rear_castor_joint_name_ = "rear_castor_joint";
   if (_sdf->HasElement("rear_castor_joint"))
-    rear_castor_joint_name_ = _sdf->GetElement("rear_castor_joint")->GetValueString();
+    rear_castor_joint_name_ = _sdf->GetElement("rear_castor_joint")->Get<std::string>();
 
   wheel_sep_ = 0.34;
   if (_sdf->HasElement("wheel_separation"))
-    wheel_sep_ = _sdf->GetElement("wheel_separation")->GetValueDouble();
+    wheel_sep_ = _sdf->GetElement("wheel_separation")->Get<double>();
 
   wheel_sep_ = 0.34;
   if (_sdf->HasElement("wheel_separation"))
-    wheel_sep_ = _sdf->GetElement("wheel_separation")->GetValueDouble();
+    wheel_sep_ = _sdf->GetElement("wheel_separation")->Get<double>();
 
   wheel_diam_ = 0.15;
   if (_sdf->HasElement("wheel_diameter"))
-    wheel_diam_ = _sdf->GetElement("wheel_diameter")->GetValueDouble();
+    wheel_diam_ = _sdf->GetElement("wheel_diameter")->Get<double>();
 
   torque_ = 10.0;
   if (_sdf->HasElement("torque"))
-    torque_ = _sdf->GetElement("torque")->GetValueDouble();
+    torque_ = _sdf->GetElement("torque")->Get<double>();
 
-
-  //base_geom_name_ = "base_geom";
-  base_geom_name_ = "base_footprint_geom_base_link";
+  base_geom_name_ = "base_footprint_collision_base_link";
   if (_sdf->HasElement("base_geom"))
-    base_geom_name_ = _sdf->GetElement("base_geom")->GetValueString();
+    base_geom_name_ = _sdf->GetElement("base_geom")->Get<std::string>();
   base_geom_ = my_parent_->GetChildCollision(base_geom_name_);
   if (!base_geom_)
   {
@@ -107,15 +105,6 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 
   base_geom_->SetContactsEnabled(true);
   contact_event_ = base_geom_->ConnectContact(boost::bind(&GazeboRosCreate::OnContact, this, _1, _2));
-
-  // Get then name of the parent model
-  std::string modelName = _sdf->GetParent()->GetValueString("name");
-
-  // Listen to the update event. This event is broadcast every
-  // simulation iteration.
-  this->updateConnection = event::Events::ConnectWorldUpdateStart(
-      boost::bind(&GazeboRosCreate::UpdateChild, this));
-  gzdbg << "plugin model name: " << modelName << "\n";
 
   wall_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("wall_sensor"));
@@ -199,6 +188,14 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   odom_pose_[0] = 0.0;
   odom_pose_[1] = 0.0;
   odom_pose_[2] = 0.0;
+
+  // Get then name of the parent model
+  std::string modelName = _sdf->GetParent()->Get<std::string>("name");
+
+  // Listen to the update event. This event is broadcast every
+  // simulation iteration.
+  this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&GazeboRosCreate::UpdateChild, this));
+  gzdbg << "plugin model name: " << modelName << "\n";
 }
 
 
