@@ -14,3 +14,6 @@ catkin_package()
 
 install(PROGRAMS scripts/create_dashboard
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+        
+install(DIRECTORY plugins
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
