@@ -6,15 +6,19 @@
   <maintainer email="nate@osrfoundation.org">Nate Koenig</maintainer>
   <license>BSD</license>
   <author email="nate@osrfoundation.org">Nate Koenig</author>
-  <url>http://ros.org/wiki/create_gazebo_plugins</url>
+  <url type="website">http://ros.org/wiki/create_gazebo_plugins</url>
+  <url type="repository">https://github.com/turtlebot/turtlebot_create_desktop</url>
+  <url type="bugtracker">https://github.com/turtlebot/turtlebot_create_desktop/issues</url>
   
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>create_node</build_depend>
   <build_depend>gazebo_ros</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
+
   <run_depend>create_node</run_depend>
   <run_depend>gazebo_ros</run_depend>
   <run_depend>geometry_msgs</run_depend>

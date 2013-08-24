@@ -8,17 +8,22 @@
   </description>
   <maintainer email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</maintainer>
   <license>BSD</license>
-  <url>http://ros.org/wiki/create_dashboard</url>
+
+  <url type="website">http://ros.org/wiki/create_dashboard</url>
+  <url type="repository">https://github.com/turtlebot/turtlebot_create_desktop</url>
+  <url type="bugtracker">https://github.com/turtlebot/turtlebot_create_desktop/issues</url>
   <author email="zklapow@gmail.com">Ze'ev Klapow</author>
   <author email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</author>
   
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>create_node</build_depend>
   <build_depend>diagnostic_msgs</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>rqt_gui</build_depend>
   <build_depend>rqt_gui_py</build_depend>
   <build_depend>rqt_robot_dashboard</build_depend>
+  
   <run_depend>create_node</run_depend>
   <run_depend>diagnostic_msgs</run_depend>
   <run_depend>rospy</run_depend>
