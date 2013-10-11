@@ -1,5 +1,5 @@
-#include <sensors/SensorManager.hh>
-#include <sensors/RaySensor.hh>
+#include <gazebo/sensors/SensorManager.hh>
+#include <gazebo/sensors/RaySensor.hh>
 #include <create_node/TurtlebotSensorState.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
