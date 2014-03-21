@@ -2,8 +2,8 @@
 Changelog for package create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.1 (2014-03-21)
+------------------
 * fixes gazebo header paths (refs `#7 <https://github.com/turtlebot/turtlebot_create_desktop/issues/7>`_)
 * Contributors: Marcus Liebhardt
 
