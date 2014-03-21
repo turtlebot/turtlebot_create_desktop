@@ -2,6 +2,11 @@
 Changelog for package create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixes gazebo header paths (refs `#7 <https://github.com/turtlebot/turtlebot_create_desktop/issues/7>`_)
+* Contributors: Marcus Liebhardt
+
 2.2.0 (2013-08-30)
 ------------------
 * publish odom and joint_states with absolute paths so they don't go under /turtlebot_node/ namespace.
