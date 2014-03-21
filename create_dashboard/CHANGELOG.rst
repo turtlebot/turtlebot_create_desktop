@@ -2,6 +2,9 @@
 Changelog for package create_dashboard
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.1 (2014-03-21)
 ------------------
 * create_dashboard: Fix some python syntax errors

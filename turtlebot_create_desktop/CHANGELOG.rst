@@ -2,6 +2,9 @@
 Changelog for package turtlebot_create_desktop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.2.1 (2014-03-21)
 ------------------
 
