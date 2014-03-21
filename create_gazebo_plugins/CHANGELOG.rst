@@ -2,8 +2,8 @@
 Changelog for package create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.2 (2014-03-21)
+------------------
 * boost::shared_*_cast are deprecated, removed in boost 1.53
 * Contributors: Scott K Logan
 
