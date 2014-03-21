@@ -106,7 +106,7 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   base_geom_->SetContactsEnabled(true);
   contact_event_ = base_geom_->ConnectContact(boost::bind(&GazeboRosCreate::OnContact, this, _1, _2));
 
-  wall_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
+  wall_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("wall_sensor"));
   if (!wall_sensor_)
   {
@@ -114,13 +114,13 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
     return;
   }
 
-  left_cliff_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
+  left_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("left_cliff_sensor"));
-  right_cliff_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
+  right_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("right_cliff_sensor"));
-  leftfront_cliff_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
+  leftfront_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("leftfront_cliff_sensor"));
-  rightfront_cliff_sensor_ = boost::shared_dynamic_cast<sensors::RaySensor>(
+  rightfront_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("rightfront_cliff_sensor"));
 
   wall_sensor_->SetActive(true);
