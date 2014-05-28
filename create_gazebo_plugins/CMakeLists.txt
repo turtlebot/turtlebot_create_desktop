@@ -35,7 +35,9 @@ add_dependencies(gazebo_ros_create create_node_gencpp
                                    nav_msgs_gencpp
                                    sensor_msgs_gencpp)
 
-target_link_libraries(gazebo_ros_create ${catkin_LIBRARIES})
+target_link_libraries(gazebo_ros_create
+                      ${catkin_LIBRARIES}
+                      ${GAZEBO_LIBRARIES})
 
 install(TARGETS gazebo_ros_create
         DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
