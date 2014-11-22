@@ -1,10 +1,12 @@
 #ifndef GAZEBO_ROS_CREATE_H
 #define GAZEBO_ROS_CREATE_H
 
+#include <gazebo/msgs/msgs.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/physics/PhysicsTypes.hh>
 #include <gazebo/sensors/SensorTypes.hh>
 #include <gazebo/transport/TransportTypes.hh>
+#include <gazebo/transport/transport.hh>
 #include <gazebo/common/Time.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/Events.hh>
@@ -19,18 +21,18 @@ namespace gazebo
 {
   class GazeboRosCreate : public ModelPlugin
   {
-    public: 
+    public:
       GazeboRosCreate();
       virtual ~GazeboRosCreate();
-          
+
       virtual void Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf );
 
       virtual void UpdateChild();
-  
+
     private:
 
       void UpdateSensors();
-      void OnContact(const std::string &name, const physics::Contact &contact);
+      void OnContact(ConstContactsPtr &contact);
       void OnCmdVel( const geometry_msgs::TwistConstPtr &msg);
 
 
@@ -55,11 +57,11 @@ namespace gazebo
       ros::NodeHandle *rosnode_;
       //ros::Service operating_mode_srv_;
       //ros::Service digital_output_srv_;
-  
+
       ros::Publisher sensor_state_pub_;
       ros::Publisher odom_pub_;
       ros::Publisher joint_state_pub_;
-  
+
       ros::Subscriber cmd_vel_sub_;
 
       physics::WorldPtr my_world_;
@@ -93,7 +95,9 @@ namespace gazebo
       void spin();
       boost::thread *spinner_thread_;
 
-      event::ConnectionPtr contact_event_;
+      //event::ConnectionPtr contact_event_;
+      transport::NodePtr gazebo_node_;
+      transport::SubscriberPtr contact_sub_;
 
       // Pointer to the update event connection
       event::ConnectionPtr updateConnection;

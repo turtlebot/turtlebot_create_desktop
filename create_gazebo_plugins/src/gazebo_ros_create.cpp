@@ -11,6 +11,7 @@ using namespace gazebo;
 enum {LEFT= 0, RIGHT=1, FRONT=2, REAR=3};
 
 GazeboRosCreate::GazeboRosCreate()
+  : gazebo_node_(new transport::Node())
 {
   this->spinner_thread_ = new boost::thread( boost::bind( &GazeboRosCreate::spin, this) );
 
@@ -36,7 +37,7 @@ GazeboRosCreate::~GazeboRosCreate()
   delete [] wheel_speed_;
   delete rosnode_;
 }
-    
+
 void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 {
   this->my_world_ = _parent->GetWorld();
@@ -103,8 +104,11 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
     }
   }
 
-  base_geom_->SetContactsEnabled(true);
-  contact_event_ = base_geom_->ConnectContact(boost::bind(&GazeboRosCreate::OnContact, this, _1, _2));
+  //base_geom_->SetContactsEnabled(true);
+  //contact_event_ = base_geom_->ConnectContact(boost::bind(&GazeboRosCreate::OnContact, this, _1, _2));
+  physics::ContactManager *mgr = my_world_->GetPhysicsEngine()->GetContactManager();
+  std::string topic = mgr->CreateFilter(base_geom_name_, base_geom_name_);
+  contact_sub_ = gazebo_node_->Subscribe(topic, &GazeboRosCreate::OnContact, this);
 
   wall_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("wall_sensor"));
@@ -199,22 +203,27 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 }
 
 
-void GazeboRosCreate::OnContact(const std::string &name, const physics::Contact &contact)
+void GazeboRosCreate::OnContact(ConstContactsPtr &contacts)
 {
   float y_overlap = 0.16495 * sin( 10 * (M_PI/180.0) );
 
-  for (unsigned int j=0; j < (unsigned int)contact.count; j++)
+  for (int i=0; i < contacts->contact_size(); i++ )
   {
-    // Make sure the contact is on the front bumper
-    if (contact.positions[j].x > 0.012 && contact.positions[j].z < 0.06 && 
-        contact.positions[j].z > 0.01)
+    const msgs::Contact & contact = contacts->contact(i);
+    const int contact_count = contact.position_size();
+    for (unsigned int j=0; j < contact_count; j++)
     {
-      // Right bump sensor
-      if (contact.positions[j].y <= y_overlap)
-        sensor_state_.bumps_wheeldrops |= 0x1; 
-      // Left bump sensor
-      if (contact.positions[j].y >= -y_overlap)
-        sensor_state_.bumps_wheeldrops |= 0x2; 
+      // Make sure the contact is on the front bumper
+      if (contact.position(j).x() > 0.012 && contact.position(j).z() < 0.06 &&
+          contact.position(j).z() > 0.01)
+      {
+        // Right bump sensor
+        if (contact.position(j).y() <= y_overlap)
+          sensor_state_.bumps_wheeldrops |= 0x1;
+        // Left bump sensor
+        if (contact.position(j).y() >= -y_overlap)
+          sensor_state_.bumps_wheeldrops |= 0x2;
+      }
     }
   }
 
@@ -313,7 +322,7 @@ void GazeboRosCreate::UpdateChild()
   odom.twist.twist.angular.y = 0;
   odom.twist.twist.angular.z = odom_vel_[2];
 
-  odom_pub_.publish( odom ); 
+  odom_pub_.publish( odom );
 
   js_.header.stamp.sec = time_now.sec;
   js_.header.stamp.nsec = time_now.nsec;
