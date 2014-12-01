@@ -2,8 +2,8 @@
 Changelog for package create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.0 (2014-12-01)
+------------------
 * Update contact manager for Gazebo 2.0
 * add catkin_ignore due to the compile error. remove this when it is ready go
 * -Fix instantaneous odom getting computed, but not published (would alway publish 0 before)
