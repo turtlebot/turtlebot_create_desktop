@@ -2,6 +2,12 @@
 Changelog for package create_dashboard
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* create_dashboard: Fix some python syntax errors
+  Even if this file isn't used, it will be bytecompiled when packaged for Fedora. This will fail if there are syntax errors in the file, so even if it is not used or has functional errors, it needs to be syntactically correct if it is in the repository.
+* Contributors: Scott K Logan
+
 2.3.0 (2014-12-01)
 ------------------
 

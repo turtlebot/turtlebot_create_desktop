@@ -2,6 +2,9 @@
 Changelog for package create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 2.3.0 (2014-12-01)
 ------------------
 * Update contact manager for Gazebo 2.0
