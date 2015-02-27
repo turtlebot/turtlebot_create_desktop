@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>create_gazebo_plugins</name>
-  <version>2.3.0</version>
+  <version>2.3.1</version>
   <description>Gazebo plugins for the iRobot Create</description>
   <maintainer email="nate@osrfoundation.org">Nate Koenig</maintainer>
   <license>BSD</license>
