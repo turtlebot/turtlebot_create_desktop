@@ -7,6 +7,8 @@ if (PKG_CONFIG_FOUND)
   pkg_check_modules(GAZEBO gazebo)
 endif()
 
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -std=c++11")
+
 find_package(catkin REQUIRED COMPONENTS create_node
                                         gazebo_ros
                                         geometry_msgs
