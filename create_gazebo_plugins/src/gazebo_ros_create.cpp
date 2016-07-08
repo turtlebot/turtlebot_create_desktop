@@ -110,7 +110,7 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   std::string topic = mgr->CreateFilter(base_geom_name_, base_geom_name_);
   contact_sub_ = gazebo_node_->Subscribe(topic, &GazeboRosCreate::OnContact, this);
 
-  wall_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
+  wall_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("wall_sensor"));
   if (!wall_sensor_)
   {
@@ -118,13 +118,13 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
     return;
   }
 
-  left_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
+  left_cliff_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("left_cliff_sensor"));
-  right_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
+  right_cliff_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("right_cliff_sensor"));
-  leftfront_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
+  leftfront_cliff_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("leftfront_cliff_sensor"));
-  rightfront_cliff_sensor_ = boost::dynamic_pointer_cast<sensors::RaySensor>(
+  rightfront_cliff_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("rightfront_cliff_sensor"));
 
   wall_sensor_->SetActive(true);
@@ -279,12 +279,12 @@ void GazeboRosCreate::UpdateChild()
   if (set_joints_[LEFT])
   {
     joints_[LEFT]->SetVelocity( 0, wheel_speed_[LEFT] / (wd/2.0) );
-    joints_[LEFT]->SetMaxForce( 0, torque_ );
+    joints_[LEFT]->SetParam("max_force", 0, torque_);
   }
   if (set_joints_[RIGHT])
   {
     joints_[RIGHT]->SetVelocity( 0, wheel_speed_[RIGHT] / (wd / 2.0) );
-    joints_[RIGHT]->SetMaxForce( 0, torque_ );
+    joints_[RIGHT]->SetParam("max_force", 0, torque_);
   }
 
   nav_msgs::Odometry odom;
