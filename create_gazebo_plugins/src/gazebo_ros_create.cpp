@@ -100,7 +100,7 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
     if (!base_geom_)
     {
       ROS_ERROR("Unable to find geom[%s]",base_geom_name_.c_str());
-      return;
+      // return;
     }
   }
 
