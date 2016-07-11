@@ -87,29 +87,6 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   if (_sdf->HasElement("torque"))
     torque_ = _sdf->GetElement("torque")->Get<double>();
 
-  base_geom_name_ = "base_footprint_collision_base_link";
-  if (_sdf->HasElement("base_geom"))
-    base_geom_name_ = _sdf->GetElement("base_geom")->Get<std::string>();
-  base_geom_ = my_parent_->GetChildCollision(base_geom_name_);
-  if (!base_geom_)
-  {
-    // This is a hack for ROS Diamond back. E-turtle and future releases
-    // will not need this, because it will contain the fixed-joint reduction
-    // in urdf2gazebo
-    base_geom_ = my_parent_->GetChildCollision("base_footprint_geom");
-    if (!base_geom_)
-    {
-      ROS_ERROR("Unable to find geom[%s]",base_geom_name_.c_str());
-      // return;
-    }
-  }
-
-  //base_geom_->SetContactsEnabled(true);
-  //contact_event_ = base_geom_->ConnectContact(boost::bind(&GazeboRosCreate::OnContact, this, _1, _2));
-  physics::ContactManager *mgr = my_world_->GetPhysicsEngine()->GetContactManager();
-  std::string topic = mgr->CreateFilter(base_geom_name_, base_geom_name_);
-  contact_sub_ = gazebo_node_->Subscribe(topic, &GazeboRosCreate::OnContact, this);
-
   wall_sensor_ = std::dynamic_pointer_cast<sensors::RaySensor>(
     sensors::SensorManager::Instance()->GetSensor("wall_sensor"));
   if (!wall_sensor_)
