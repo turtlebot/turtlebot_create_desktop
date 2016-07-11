@@ -343,27 +343,27 @@ void GazeboRosCreate::UpdateChild()
 
 void GazeboRosCreate::UpdateSensors()
 {
-  if (wall_sensor_->GetRange(0) < 0.04)
+  if (wall_sensor_->Range(0) < 0.04)
     sensor_state_.wall = true;
   else
     sensor_state_.wall = false;
 
-  if (left_cliff_sensor_->GetRange(0) > 0.02)
+  if (left_cliff_sensor_->Range(0) > 0.02)
     sensor_state_.cliff_left = true;
   else
     sensor_state_.cliff_left = false;
 
-  if (right_cliff_sensor_->GetRange(0) > 0.02)
+  if (right_cliff_sensor_->Range(0) > 0.02)
     sensor_state_.cliff_right = true;
   else
     sensor_state_.cliff_right = false;
 
-  if (rightfront_cliff_sensor_->GetRange(0) > 0.02)
+  if (rightfront_cliff_sensor_->Range(0) > 0.02)
     sensor_state_.cliff_front_right = true;
   else
     sensor_state_.cliff_front_right = false;
 
-  if (leftfront_cliff_sensor_->GetRange(0) > 0.02)
+  if (leftfront_cliff_sensor_->Range(0) > 0.02)
     sensor_state_.cliff_front_left = true;
   else
     sensor_state_.cliff_front_left = false;
