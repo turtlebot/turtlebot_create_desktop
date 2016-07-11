@@ -42,7 +42,6 @@ namespace gazebo
       std::string right_wheel_joint_name_;
       std::string front_castor_joint_name_;
       std::string rear_castor_joint_name_;
-      std::string base_geom_name_;
 
       /// Separation between the wheels
       float wheel_sep_;
@@ -79,7 +78,6 @@ namespace gazebo
 
       bool set_joints_[4];
       physics::JointPtr joints_[4];
-      physics::CollisionPtr base_geom_;
 
       sensors::RaySensorPtr left_cliff_sensor_;
       sensors::RaySensorPtr leftfront_cliff_sensor_;
