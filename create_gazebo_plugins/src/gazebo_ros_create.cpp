@@ -165,7 +165,7 @@ void GazeboRosCreate::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf )
   if (joints_[REAR]) set_joints_[REAR] = true;
 
   //initialize time and odometry position
-  prev_update_time_ = last_cmd_vel_time_ = this->my_world_->GetSimTime();
+  prev_update_time_ = last_cmd_vel_time_ = this->my_world_->SimTime();
   odom_pose_[0] = 0.0;
   odom_pose_[1] = 0.0;
   odom_pose_[2] = 0.0;
@@ -208,7 +208,7 @@ void GazeboRosCreate::OnContact(ConstContactsPtr &contacts)
 
 void GazeboRosCreate::UpdateChild()
 {
-  common::Time time_now = this->my_world_->GetSimTime();
+  common::Time time_now = this->my_world_->SimTime();
   common::Time step_time = time_now - prev_update_time_;
   prev_update_time_ = time_now;
 
@@ -303,25 +303,25 @@ void GazeboRosCreate::UpdateChild()
   js_.header.stamp.nsec = time_now.nsec;
   if (this->set_joints_[LEFT])
   {
-    js_.position[0] = joints_[LEFT]->GetAngle(0).Radian();
+    js_.position[0] = joints_[LEFT]->Position(0);
     js_.velocity[0] = joints_[LEFT]->GetVelocity(0);
   }
 
   if (this->set_joints_[RIGHT])
   {
-    js_.position[1] = joints_[RIGHT]->GetAngle(0).Radian();
+    js_.position[1] = joints_[RIGHT]->Position(0);
     js_.velocity[1] = joints_[RIGHT]->GetVelocity(0);
   }
 
   if (this->set_joints_[FRONT])
   {
-    js_.position[2] = joints_[FRONT]->GetAngle(0).Radian();
+    js_.position[2] = joints_[FRONT]->Position(0);
     js_.velocity[2] = joints_[FRONT]->GetVelocity(0);
   }
 
   if (this->set_joints_[REAR])
   {
-    js_.position[3] = joints_[REAR]->GetAngle(0).Radian();
+    js_.position[3] = joints_[REAR]->Position(0);
     js_.velocity[3] = joints_[REAR]->GetVelocity(0);
   }
 
@@ -374,7 +374,7 @@ void GazeboRosCreate::UpdateSensors()
 
 void GazeboRosCreate::OnCmdVel( const geometry_msgs::TwistConstPtr &msg)
 {
-  last_cmd_vel_time_ = this->my_world_->GetSimTime();
+  last_cmd_vel_time_ = this->my_world_->SimTime();
   double vr, va;
   vr = msg->linear.x;
   va = msg->angular.z;
