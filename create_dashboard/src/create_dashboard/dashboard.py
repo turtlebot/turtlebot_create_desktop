@@ -7,7 +7,7 @@ import create_node.msg
 
 from rqt_robot_dashboard.dashboard import Dashboard
 from rqt_robot_dashboard.widgets import MonitorDashWidget, ConsoleDashWidget, MenuDashWidget, BatteryDashWidget, IconToolButton, NavViewDashWidget
-from QtGui import QMessageBox, QAction
+from QtWidgets import QMessageBox, QAction
 from python_qt_binding.QtCore import QSize
 
 from .battery import TurtlebotBattery
